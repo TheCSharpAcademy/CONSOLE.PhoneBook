@@ -25,6 +25,8 @@ namespace PhoneBook
                 Console.WriteLine("Type 4 to Update Category");
                 Console.WriteLine("Type 5 to View Contacts");
                 Console.WriteLine("Type 6 to Add Contacts");
+                Console.WriteLine("Type 7 to Delete Contact");
+                Console.WriteLine("Type 8 to Update Contact");
 
                 string commandInput = Console.ReadLine();
                 while (string.IsNullOrEmpty(commandInput) || !int.TryParse(commandInput, out _))
@@ -89,11 +91,49 @@ namespace PhoneBook
                         contactsController.AddContact(contact);
                         break;
 
+                    case 7:
+                        contactsController.ViewContacts();
+
+                        int contactId = GetIntegerInput("Please add id of the category you want to delete.");
+                        var contactToDelete = contactsController.GetContactById(contactId);
+
+                        while (contactToDelete == null)
+                        {
+                            categoryId = GetIntegerInput($"A category with the id {contactId} doesn't exist. Try again.");
+                        }
+
+                        contactsController.DeleteContact(contactToDelete);
+                        break;
+                    case 8:
+                        ProcessContactUpdate();
+                        
+                        break;
+
+
+
                     default:
                         Console.WriteLine("\nInvalid Command. Please type a number from 0 to 6.\n");
                         break;
                 }
             }
+        }
+
+        private void ProcessContactUpdate()
+        {
+            contactsController.ViewContacts();
+
+            int conId = GetIntegerInput("Please add id of the category you want to update.");
+            var contactToUpdate = contactsController.GetContactById(conId);
+
+            while (contactToUpdate == null)
+            {
+                conId = GetIntegerInput($"A category with the id {conId} doesn't exist. Try again.");
+            }
+
+            contactToUpdate.FirstName = GetUpdateStringInput("Please enter first name or type 0 to keep name");
+            contactToUpdate.LastName = GetStringInput("Please enter last name or type 0 to keep name");
+            contactToUpdate.Number = GetPhoneInput("Please enter new phone number or type 0 to keep number");
+            contactsController.UpdateContact(contactToUpdate);
         }
         private string GetStringInput(string message)
         {
@@ -101,6 +141,25 @@ namespace PhoneBook
             string input = Console.ReadLine();
 
             while (!Validator.IsStringValid(input))
+            {
+                Console.WriteLine("\nInvalid input");
+                input = Console.ReadLine();
+            }
+
+            return input;
+        }
+
+        private string GetUpdateStringInput(string message)
+        {
+            Console.WriteLine(message);
+            string input = Console.ReadLine();
+
+            if (input == "0")
+            {
+                return;
+            }
+
+            while (!Validator.IsUpdateStringValid(input))
             {
                 Console.WriteLine("\nInvalid input");
                 input = Console.ReadLine();

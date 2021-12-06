@@ -97,11 +97,44 @@ namespace PhoneBook
             }
         }
 
+        internal Contact GetContactById(int id)
+        {
+            Contact contact = new();
+            using (var db = new DataContext())
+            {
+                contact = db.Contacts.FirstOrDefault(c => c.ContactId != null && c.ContactId == id);
+            }
+            return contact;
+        }
+
         internal void AddContact(Contact contact)
         {
             using (var db = new DataContext())
             {
                 db.Add(contact);
+                db.SaveChanges();
+            }
+
+            ViewContacts();
+        }
+
+        internal void DeleteContact(Contact contact)
+        {
+            using (var db = new DataContext())
+            {
+                db.Remove(contact);
+                db.SaveChanges();
+            }
+
+            ViewContacts();
+        }
+
+        internal void UpdateContact(Contact contact)
+        {
+            using (var db = new DataContext())
+            {
+                var contactToUpdate = contact;
+
                 db.SaveChanges();
             }
 

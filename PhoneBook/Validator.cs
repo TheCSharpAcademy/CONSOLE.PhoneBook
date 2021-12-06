@@ -55,5 +55,22 @@ namespace PhoneBook
 
             return true;
         }
+
+        internal static bool IsUpdateStringValid(string stringInput)
+        {
+            foreach (char c in stringInput)
+            {
+                if ((!Char.IsLetter(c) && c != '/' && c != '0') )
+                    return false;
+            }
+
+            if (String.IsNullOrEmpty(stringInput))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
     }
 }
