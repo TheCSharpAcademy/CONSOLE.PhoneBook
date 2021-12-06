@@ -133,8 +133,12 @@ namespace PhoneBook
         {
             using (var db = new DataContext())
             {
-                var contactToUpdate = contact;
+                var contactToUpdate = db.Contacts.FirstOrDefault(c => c.ContactId != null && c.ContactId == contact.ContactId);
 
+                contactToUpdate.FirstName = contact.FirstName;
+                contactToUpdate.LastName = contact.LastName;
+                contactToUpdate.Number = contact.Number;
+               
                 db.SaveChanges();
             }
 

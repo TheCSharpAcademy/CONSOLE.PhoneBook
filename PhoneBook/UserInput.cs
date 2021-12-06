@@ -46,76 +46,98 @@ namespace PhoneBook
                         contactsController.ViewCategories();
                         break;
                     case 2:
-                        string categoryName = GetStringInput("Please add category name.");
-                        contactsController.AddCategory(categoryName);
+                        ProcessAddCategory();
                         break;
                     case 3:
-                        contactsController.ViewCategories();
-
-                        int categoryId = GetIntegerInput("Please add id of the category you want to delete.");
-                        var category = contactsController.GetCategoryById(categoryId);
-
-                        while (category == null)
-                        {
-                            categoryId = GetIntegerInput($"A category with the id {categoryId} doesn't exist. Try again.");
-                        }
-
-                        contactsController.DeleteCategory(category);
+                        ProcessDeleteCategory();
                         break;
                     case 4:
-                        contactsController.ViewCategories();
-
-                        int id = GetIntegerInput("Please add id of the category you want to update.");
-                        var cat = contactsController.GetCategoryById(id);
-
-                        while (cat == null)
-                        {
-                            id = GetIntegerInput($"A category with the id {id} doesn't exist. Try again.");
-                        }
-
-                        string name = GetStringInput("Please enter new name for category.");
-                        contactsController.UpdateCategory(id, name);
+                        ProcessCategoryUpdate();
                         break;
-
                     case 5:
                         contactsController.ViewContacts();
                         break;
                     case 6:
-                        contactsController.ViewCategories();
-                        Contact contact = new();
-                        contact.CategoryId = GetIntegerInput("Please add categoryId for contact.");
-                        contact.FirstName = GetStringInput("Please type first name.");
-                        contact.LastName = GetStringInput("Please type last name.");
-                        contact.Number = GetPhoneInput("Please type phone number.");
-
-                        contactsController.AddContact(contact);
+                        ProcessAddContact();
                         break;
-
                     case 7:
-                        contactsController.ViewContacts();
-
-                        int contactId = GetIntegerInput("Please add id of the category you want to delete.");
-                        var contactToDelete = contactsController.GetContactById(contactId);
-
-                        while (contactToDelete == null)
-                        {
-                            categoryId = GetIntegerInput($"A category with the id {contactId} doesn't exist. Try again.");
-                        }
-
-                        contactsController.DeleteContact(contactToDelete);
+                        ProcessDeleteContact();
                         break;
                     case 8:
                         ProcessContactUpdate();
-                        
                         break;
 
 
 
                     default:
-                        Console.WriteLine("\nInvalid Command. Please type a number from 0 to 6.\n");
+                        Console.WriteLine("\nInvalid Command. Please type a number from 0 to 8.\n");
                         break;
                 }
             }
+        }
+
+        private void ProcessAddCategory()
+        {
+            string categoryName = GetStringInput("Please add category name.");
+            contactsController.AddCategory(categoryName);
+        }
+
+        private void ProcessDeleteCategory()
+        {
+            contactsController.ViewCategories();
+
+            int categoryId = GetIntegerInput("Please add id of the category you want to delete.");
+            var category = contactsController.GetCategoryById(categoryId);
+
+            while (category == null)
+            {
+                categoryId = GetIntegerInput($"A category with the id {categoryId} doesn't exist. Try again.");
+            }
+
+            contactsController.DeleteCategory(category);
+        }
+
+        private void ProcessCategoryUpdate()
+        {
+            contactsController.ViewCategories();
+
+            int id = GetIntegerInput("Please add id of the category you want to update.");
+            var cat = contactsController.GetCategoryById(id);
+
+            while (cat == null)
+            {
+                id = GetIntegerInput($"A category with the id {id} doesn't exist. Try again.");
+            }
+
+            string name = GetStringInput("Please enter new name for category.");
+            contactsController.UpdateCategory(id, name);
+        }
+
+        private void ProcessAddContact()
+        {
+            contactsController.ViewCategories();
+            Contact contact = new();
+            contact.CategoryId = GetIntegerInput("Please add categoryId for contact.");
+            contact.FirstName = GetStringInput("Please type first name.");
+            contact.LastName = GetStringInput("Please type last name.");
+            contact.Number = GetPhoneInput("Please type phone number.");
+
+            contactsController.AddContact(contact);
+        }
+
+        private void ProcessDeleteContact()
+        {
+            contactsController.ViewContacts();
+
+            int contactId = GetIntegerInput("Please add id of the category you want to delete.");
+            var contactToDelete = contactsController.GetContactById(contactId);
+
+            while (contactToDelete == null)
+            {
+                contactId = GetIntegerInput($"A category with the id {contactId} doesn't exist. Try again.");
+            }
+
+            contactsController.DeleteContact(contactToDelete);
         }
 
         private void ProcessContactUpdate()
@@ -130,11 +152,18 @@ namespace PhoneBook
                 conId = GetIntegerInput($"A category with the id {conId} doesn't exist. Try again.");
             }
 
-            contactToUpdate.FirstName = GetUpdateStringInput("Please enter first name or type 0 to keep name");
-            contactToUpdate.LastName = GetStringInput("Please enter last name or type 0 to keep name");
-            contactToUpdate.Number = GetPhoneInput("Please enter new phone number or type 0 to keep number");
+            var firstNameUpdate = GetUpdateStringInput("Please enter first name or type 0 to keep name");
+            if (firstNameUpdate != "0") contactToUpdate.FirstName = firstNameUpdate;
+
+            var lastNameUpdate = GetUpdateStringInput("Please enter last name or type 0 to keep name");
+            if (lastNameUpdate != "0") contactToUpdate.LastName = firstNameUpdate;
+
+            var phoneUpdate = GetPhoneInput("Please enter new phone number or type 0 to keep number");
+            if (phoneUpdate != "0") contactToUpdate.Number = phoneUpdate;
+
             contactsController.UpdateContact(contactToUpdate);
         }
+
         private string GetStringInput(string message)
         {
             Console.WriteLine(message);
@@ -153,11 +182,6 @@ namespace PhoneBook
         {
             Console.WriteLine(message);
             string input = Console.ReadLine();
-
-            if (input == "0")
-            {
-                return;
-            }
 
             while (!Validator.IsUpdateStringValid(input))
             {
