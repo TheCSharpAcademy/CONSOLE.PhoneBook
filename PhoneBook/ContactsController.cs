@@ -97,6 +97,24 @@ namespace PhoneBook
             }
         }
 
+        internal void ViewContactsByCategoryId(int id)
+        {
+            using (var db = new DataContext())
+            {
+
+                var contacts = db.Contacts
+                .Where(c => c.CategoryId == id)
+                .OrderBy(b => b.LastName)
+                .ToList();
+
+                var categoryName = contacts.Select(c => c.Category.Name).ToString();
+
+                Console.WriteLine(contacts.ToString());
+
+                TableVisualisationEngine.ShowTable(contacts, categoryName);
+            }
+        }
+
         internal Contact GetContactById(int id)
         {
             Contact contact = new();

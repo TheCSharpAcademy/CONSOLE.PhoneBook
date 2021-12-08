@@ -27,6 +27,7 @@ namespace PhoneBook
                 Console.WriteLine("Type 6 to Add Contacts");
                 Console.WriteLine("Type 7 to Delete Contact");
                 Console.WriteLine("Type 8 to Update Contact");
+                Console.WriteLine("Type 9 to View Contacts of One Category");
 
                 string commandInput = Console.ReadLine();
                 while (string.IsNullOrEmpty(commandInput) || !int.TryParse(commandInput, out _))
@@ -65,6 +66,9 @@ namespace PhoneBook
                         break;
                     case 8:
                         ProcessContactUpdate();
+                        break;
+                    case 9:
+                        ProcessContactsByCategory();
                         break;
 
 
@@ -162,6 +166,21 @@ namespace PhoneBook
             if (phoneUpdate != "0") contactToUpdate.Number = phoneUpdate;
 
             contactsController.UpdateContact(contactToUpdate);
+        }
+
+        private void ProcessContactsByCategory()
+        {
+            contactsController.ViewCategories();
+
+            int categoryId = GetIntegerInput("Please add id of the category you want to view.");
+            var contactToDelete = contactsController.GetCategoryById(categoryId);
+
+            while (contactToDelete == null)
+            {
+                categoryId = GetIntegerInput($"A category with the id {categoryId} doesn't exist. Try again.");
+            }
+
+            contactsController.ViewContactsByCategoryId(categoryId);
         }
 
         private string GetStringInput(string message)
