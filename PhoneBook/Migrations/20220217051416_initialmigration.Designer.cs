@@ -11,8 +11,8 @@ using PhoneBook;
 namespace PhoneBook.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211202232208_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220217051416_initialmigration")]
+    partial class initialmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,10 @@ namespace PhoneBook.Migrations
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()

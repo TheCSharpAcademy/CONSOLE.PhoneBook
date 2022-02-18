@@ -1,10 +1,5 @@
 ﻿using PhoneBook.Models;
 using PhoneBook.Models.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PhoneBook
 {
@@ -82,7 +77,7 @@ namespace PhoneBook
             ViewCategories();
         }
 
-        internal void ViewContacts()
+        internal List<Contact> ViewContacts()
         {
             using (var db = new DataContext())
             {
@@ -94,6 +89,7 @@ namespace PhoneBook
                 Console.WriteLine(contacts.ToString());
 
                 TableVisualisationEngine.ShowTable(contacts, "Contacts");
+                return contacts;
             }
         }
 

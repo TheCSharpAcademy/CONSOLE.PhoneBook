@@ -28,61 +28,73 @@ namespace PhoneBook
                 Console.WriteLine("Type 7 to Delete Contact");
                 Console.WriteLine("Type 8 to Update Contact");
                 Console.WriteLine("Type 9 to View Contacts of One Category");
+                Console.WriteLine("Type M to Send Email");
 
                 string commandInput = Console.ReadLine();
-                while (string.IsNullOrEmpty(commandInput) || !int.TryParse(commandInput, out _))
+
+                while (string.IsNullOrEmpty(commandInput))
                 {
                     Console.WriteLine("\nInvalid Command. Please type a number from 0 to 2.\n");
                     commandInput = Console.ReadLine();
                 }
 
-                int command = Convert.ToInt32(commandInput);
-
-                switch (command)
+                switch (commandInput)
                 {
-                    case 0:
+                    case "0":
                         closeApp = true;
                         break;
-                    case 1:
+                    case "1":
                         contactsController.ViewCategories();
                         break;
-                    case 2:
+                    case "2":
                         ProcessAddCategory();
                         break;
-                    case 3:
+                    case "3":
                         ProcessDeleteCategory();
                         break;
-                    case 4:
+                    case "4":
                         ProcessCategoryUpdate();
                         break;
-                    case 5:
+                    case "5":
                         contactsController.ViewContacts();
                         break;
-                    case 6:
+                    case "6":
                         ProcessAddContact();
                         break;
-                    case 7:
+                    case "7":
                         ProcessDeleteContact();
                         break;
-                    case 8:
+                    case "8":
                         ProcessContactUpdate();
                         break;
-                    case 9:
+                    case "9":
                         ProcessContactsByCategory();
                         break;
-
-
-
+                    case "m":
+                        ProcessSendEmail();
+                        break;
                     default:
-                        Console.WriteLine("\nInvalid Command. Please type a number from 0 to 8.\n");
+                        Console.WriteLine("\nInvalid Command. Please type one of the options in the menu.\n");
                         break;
                 }
             }
         }
 
+        private void ProcessSendEmail()
+        {
+            var contacts = contactsController.ViewContacts();
+            var contactId = GetIntegerInput("Who would you like to send an e-mail to?");
+            var address = contacts.FirstOrDefault(x => x.ContactId == contactId)?.Email;
+            var subject = GetStringInput("Please type subject");
+            var message = GetStringInput("Please type message");
+
+            if (!string.IsNullOrEmpty(address)) EmailService.SendEmail(address, subject, message);
+
+        }
+
         private void ProcessAddCategory()
         {
-            string categoryName = GetStringInput("Please add category name.");
+            var categoryName = GetStringInput("Please add category name.");
             contactsController.AddCategory(categoryName);
         }
 
@@ -90,7 +102,7 @@ namespace PhoneBook
         {
             contactsController.ViewCategories();
 
-            int categoryId = GetIntegerInput("Please add id of the category you want to delete.");
+            var categoryId = GetIntegerInput("Please add id of the category you want to delete.");
             var category = contactsController.GetCategoryById(categoryId);
 
             while (category == null)
@@ -105,7 +117,7 @@ namespace PhoneBook
         {
             contactsController.ViewCategories();
 
-            int id = GetIntegerInput("Please add id of the category you want to update.");
+            var id = GetIntegerInput("Please add id of the category you want to update.");
             var cat = contactsController.GetCategoryById(id);
 
             while (cat == null)
@@ -113,7 +125,7 @@ namespace PhoneBook
                 id = GetIntegerInput($"A category with the id {id} doesn't exist. Try again.");
             }
 
-            string name = GetStringInput("Please enter new name for category.");
+            var name = GetStringInput("Please enter new name for category.");
             contactsController.UpdateCategory(id, name);
         }
 
@@ -125,6 +137,7 @@ namespace PhoneBook
             contact.FirstName = GetStringInput("Please type first name.");
             contact.LastName = GetStringInput("Please type last name.");
             contact.Number = GetPhoneInput("Please type phone number.");
+            contact.Email = GetStringInput("Please type email.");
 
             contactsController.AddContact(contact);
         }
@@ -133,7 +146,7 @@ namespace PhoneBook
         {
             contactsController.ViewContacts();
 
-            int contactId = GetIntegerInput("Please add id of the category you want to delete.");
+            var contactId = GetIntegerInput("Please add id of the category you want to delete.");
             var contactToDelete = contactsController.GetContactById(contactId);
 
             while (contactToDelete == null)
@@ -148,7 +161,7 @@ namespace PhoneBook
         {
             contactsController.ViewContacts();
 
-            int conId = GetIntegerInput("Please add id of the category you want to update.");
+            var conId = GetIntegerInput("Please add id of the category you want to update.");
             var contactToUpdate = contactsController.GetContactById(conId);
 
             while (contactToUpdate == null)
@@ -172,7 +185,7 @@ namespace PhoneBook
         {
             contactsController.ViewCategories();
 
-            int categoryId = GetIntegerInput("Please add id of the category you want to view.");
+            var categoryId = GetIntegerInput("Please add id of the category you want to view.");
             var contactToDelete = contactsController.GetCategoryById(categoryId);
 
             while (contactToDelete == null)
@@ -186,13 +199,13 @@ namespace PhoneBook
         private string GetStringInput(string message)
         {
             Console.WriteLine(message);
-            string input = Console.ReadLine();
+            var input = Console.ReadLine();
 
-            while (!Validator.IsStringValid(input))
-            {
-                Console.WriteLine("\nInvalid input");
-                input = Console.ReadLine();
-            }
+            //while (!Validator.IsStringValid(input))
+            //{
+            //    Console.WriteLine("\nInvalid input");
+            //    input = Console.ReadLine();
+            //}
 
             return input;
         }
@@ -200,7 +213,7 @@ namespace PhoneBook
         private string GetUpdateStringInput(string message)
         {
             Console.WriteLine(message);
-            string input = Console.ReadLine();
+            var input = Console.ReadLine();
 
             while (!Validator.IsUpdateStringValid(input))
             {
@@ -214,7 +227,7 @@ namespace PhoneBook
         private string GetPhoneInput(string phone)
         {
             Console.WriteLine(phone);
-            string input = Console.ReadLine();
+            var input = Console.ReadLine();
 
             while (!Validator.IsPhoneValid(input))
             {
@@ -228,7 +241,7 @@ namespace PhoneBook
         private int GetIntegerInput(string message)
         {
             Console.WriteLine(message);
-            string idInput = Console.ReadLine();
+            var idInput = Console.ReadLine();
 
             while (!Validator.IsIdValid(idInput))
             {
