@@ -1,76 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace PhoneBook;
 
-namespace PhoneBook
+internal class Validator
 {
-    internal class Validator
+    internal static bool IsStringValid(string stringInput)
     {
-        internal static bool IsStringValid(string stringInput)
+        foreach (char c in stringInput)
         {
-            foreach (char c in stringInput)
-            {
-                if (!Char.IsLetter(c) && c != '/')
-                    return false;
-            }
-
-            if (String.IsNullOrEmpty(stringInput))
-            {
+            if (!char.IsLetter(c) && c != '/')
                 return false;
-            }
-
-            return true;
         }
 
-        internal static bool IsIdValid(string stringInput)
+        if (string.IsNullOrEmpty(stringInput))
         {
-            foreach (char c in stringInput)
-            {
-                if (!Char.IsDigit(c))
-                    return false;
-            }
-
-            if (String.IsNullOrEmpty(stringInput))
-            {
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
-        internal static bool IsPhoneValid(string stringInput)
+        return true;
+    }
+
+    internal static bool IsIdValid(string stringInput)
+    {
+        foreach (char c in stringInput)
         {
-            foreach (char c in stringInput)
-            {
-                if (!Char.IsDigit(c))
-                    return false;
-            }
-
-            if (String.IsNullOrEmpty(stringInput))
-            {
+            if (!char.IsDigit(c))
                 return false;
-            }
-
-            return true;
         }
 
-        internal static bool IsUpdateStringValid(string stringInput)
+        if (string.IsNullOrEmpty(stringInput))
         {
-            foreach (char c in stringInput)
-            {
-                if ((!Char.IsLetter(c) && c != '/' && c != '0') )
-                    return false;
-            }
-
-            if (String.IsNullOrEmpty(stringInput))
-            {
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
+        return true;
+    }
+
+    internal static bool IsPhoneValid(string stringInput)
+    {
+        foreach (char c in stringInput)
+        {
+            if (!char.IsDigit(c))
+                return false;
+        }
+
+        if (string.IsNullOrEmpty(stringInput))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    internal static bool IsUpdateStringValid(string stringInput)
+    {
+        foreach (char c in stringInput)
+        {
+            if ((!char.IsLetter(c) && c != '/' && c != '0') )
+                return false;
+        }
+
+        if (string.IsNullOrEmpty(stringInput))
+        {
+            return false;
+        }
+
+        return true;
     }
 }

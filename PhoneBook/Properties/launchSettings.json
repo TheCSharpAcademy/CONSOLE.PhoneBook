@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PhoneBook": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Pablo\\Study\\CONSOLE.PhoneBook\\PhoneBook\\"
+    }
+  }
+}
